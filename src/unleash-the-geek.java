@@ -1,3 +1,5 @@
+package coding.game.finished;
+
 import static java.lang.Math.*;
 
 import java.util.*;
