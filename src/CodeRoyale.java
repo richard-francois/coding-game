@@ -2,9 +2,62 @@ import java.util.*;
 import java.io.*;
 import java.math.*;
 
-enum UnitType { QUEEN, KNIGHT, ARCHER};
-enum StructureType { UNDEFINED, BARRACKS};
-enum OwnerType { UNDEFINED, FRIENDLY, ENEMY};
+import static java.lang.Math.abs;
+
+enum UnitType {
+    QUEEN(-1), KNIGHT(0), ARCHER(1);
+
+    public final int id;
+    private UnitType(int id) {
+        this.id = id;
+    }
+
+    static UnitType valueOf(int id) {
+        for (UnitType u : values()) {
+            if (u.id == id) {
+                return u;
+            }
+        }
+        return null;
+    }
+};
+
+enum StructureType {
+    UNDEFINED(-1), BARRACKS(2);
+    public final int id;
+
+    private StructureType(int id) {
+        this.id = id;
+    }
+
+    static StructureType valueOf(int id) {
+        for (StructureType st : values()) {
+            if (st.id == id) {
+                return st;
+            }
+        }
+        return null;
+    }
+};
+
+enum OwnerType {
+    UNDEFINED(-1), FRIENDLY(0), ENEMY(1);
+
+    public final int id;
+
+    private OwnerType(int id) {
+        this.id = id;
+    }
+
+    static OwnerType valueOf(int id) {
+        for (OwnerType ot : values()) {
+            if (ot.id == id) {
+                return ot;
+            }
+        }
+        return null;
+    }
+};
 
 /**
  * Auto-generated code below aims at helping you parse
@@ -14,11 +67,11 @@ class Player {
 
     public static void main(String args[]) {
         Scanner in = new Scanner(System.in);
-
-        //board?scanner
+        Board board = new Board(in);
 
         // game loop
         while (true) {
+            board.update(in);
 
             // Write an action using System.out.println()
             // To debug: System.err.println("Debug messages...");
@@ -33,12 +86,54 @@ class Player {
 }
 
 class Coord {
-    int x;
-    int y;
+    final int x;
+    final int y;
 
-    Coord (int x, int y) {
+    Coord(int x, int y) {
         this.x = x;
         this.y = y;
+    }
+
+    Coord(Scanner in) {
+        this(in.nextInt(), in.nextInt());
+    }
+
+    Coord(Coord coord) {
+        this.x = coord.x;
+        this.y = coord.y;
+    }
+
+    Coord add(Coord other) {
+        return new Coord(x + other.x, y + other.y);
+    }
+
+    // Manhattan distance (for 4 directions maps)
+    // see: https://en.wikipedia.org/wiki/Taxicab_geometry
+    int distance(Coord other) {
+        return abs(x - other.x) + abs(y - other.y);
+    }
+
+    public int hashCode() {
+        final int PRIME = 31;
+        int result = 1;
+        result = PRIME * result + x;
+        result = PRIME * result + y;
+        return result;
+    }
+
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Coord other = (Coord) obj;
+        return (x == other.x) && (y == other.y);
+    }
+
+    public String toString() {
+        return x + " " + y;
     }
 }
 
