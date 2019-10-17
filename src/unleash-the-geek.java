@@ -97,7 +97,7 @@ class Action {
     final EntityType item;
     String message;
 
-    private Action(String command, Coord pos, EntityType item) {
+     Action(String command, Coord pos, EntityType item) {
         this.command = command;
         this.pos = pos;
         this.item = item;
@@ -135,7 +135,7 @@ class Action {
 }
 
 class Entity {
-    private static final Coord DEAD_POS = new Coord(-1, -1);
+     static final Coord DEAD_POS = new Coord(-1, -1);
 
     // Updated every turn
     final int id;
@@ -212,7 +212,7 @@ class Board {
     Collection<Coord> plentyCellsInRange = new ArrayList<Coord>();
     Collection<Coord> excludedCells = new ArrayList<Coord>();
 
-    private Cell[][] cells;
+     Cell[][] cells;
 
     Board(Scanner in) {
         width = in.nextInt();
@@ -290,7 +290,7 @@ class Board {
 
 class MacroTask {
 
-    private Board board;
+     Board board;
 
     public void setBoard(Board board) {
         this.board = board;
@@ -336,12 +336,12 @@ class MacroTask {
 
 class MacroAction {
 
-    private Board board;
+     Board board;
     public MacroTask task = new MacroTask();
-    private HashMap<Integer, Coord> robotsInitialPositions;
-    private HashMap<Integer, Coord> robotsLastCalculatedRadarPositionToReach = new HashMap<Integer, Coord>();
-    private HashMap<Integer, Action> robotsLastAction = new HashMap<Integer, Action>();
-    private HashMap<Integer, Coord> robotsLastDig = new HashMap<Integer, Coord>();
+     HashMap<Integer, Coord> robotsInitialPositions;
+     HashMap<Integer, Coord> robotsLastCalculatedRadarPositionToReach = new HashMap<Integer, Coord>();
+     HashMap<Integer, Action> robotsLastAction = new HashMap<Integer, Action>();
+     HashMap<Integer, Coord> robotsLastDig = new HashMap<Integer, Coord>();
     Collection<Coord> enemyBombersLastPositions = new ArrayList<>();
 
     int horizonX = 0;
@@ -370,7 +370,7 @@ class MacroAction {
         this.robotsLastDig = robotsLastDig;
     }
 
-    private void updateHorizon(Entity robot) {
+     void updateHorizon(Entity robot) {
         //horizon = Math.max(horizon, robot.pos.x);
     }
 

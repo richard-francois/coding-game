@@ -5,10 +5,10 @@ import java.math.*;
 import static java.lang.Math.abs;
 
 enum UnitType {
-    QUEEN(-1), KNIGHT(0), ARCHER(1);
+    UNDEFINED(-2), QUEEN(-1), KNIGHT(0), ARCHER(1);
 
     public final int id;
-    private UnitType(int id) {
+     UnitType(int id) {
         this.id = id;
     }
 
@@ -26,7 +26,7 @@ enum StructureType {
     UNDEFINED(-1), BARRACKS(2);
     public final int id;
 
-    private StructureType(int id) {
+     StructureType(int id) {
         this.id = id;
     }
 
@@ -45,7 +45,7 @@ enum OwnerType {
 
     public final int id;
 
-    private OwnerType(int id) {
+     OwnerType(int id) {
         this.id = id;
     }
 
@@ -139,14 +139,17 @@ class Coord {
 
 class Board {
 
-    //private Cell[][] cells;
-    private int width = 1920;
-    private int height = 1000;
+    // Cell[][] cells;
+     int width = 1920;
+     int height = 1000;
 
     Collection<Site> sites = new ArrayList<>();
-    private int numSites = 0;
-    private int gold = 0;
-    private int touchedSite = 0;
+    Collection<Unit> myTeam = new ArrayList<>();
+    Collection<Unit> opponentTeam = new ArrayList<>();
+
+     int numSites = 0;
+     int gold = 0;
+     int touchedSite = 0;
 
     Board(Scanner in) {
         numSites = in.nextInt();
@@ -169,16 +172,17 @@ class Board {
 
         gold = in.nextInt();
         touchedSite = in.nextInt(); // -1 if none
-        for (Site site : sites) {
-            site.update(in);
-        }
+        //for (Site site : sites) { site.update(in); }
+        sites.stream().forEach(s -> s.update(in));
         int numUnits = in.nextInt();
         for (int i = 0; i < numUnits; i++) {
-            int x = in.nextInt();
-            int y = in.nextInt();
-            int owner = in.nextInt();
-            int unitType = in.nextInt(); // -1 = QUEEN, 0 = KNIGHT, 1 = ARCHER
-            int health = in.nextInt();
+
+                int x = in.nextInt();
+                int y = in.nextInt();
+                int owner = in.nextInt();
+            UnitType unitType = UnitType.valueOf(in.nextInt());
+                int health = in.nextInt();
+
         }
     }
 }
@@ -189,10 +193,10 @@ class Site {
     x y: The numeric coordinates of the site's center
     radius: The radius of the site
     */
-    private int siteId = 0;
-    private int x = 0;
-    private int y = 0;
-    private int radius = 0;
+     int siteId = 0;
+     int x = 0;
+     int y = 0;
+     int radius = 0;
 
     int ignore1 = 0;
     int ignore2 = 0;
@@ -223,7 +227,7 @@ class Unit {
     int x = 0;
     int y = 0;
     int owner = 0;
-    int unitType = 0;
+    UnitType unitType = UnitType.UNDEFINED;
     int health = 0;
 }
 
