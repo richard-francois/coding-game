@@ -140,28 +140,21 @@ class Coord {
 class Board {
 
     // Cell[][] cells;
-     int width = 1920;
-     int height = 1000;
+    int width = 1920;
+    int height = 1000;
 
     Collection<Site> sites = new ArrayList<>();
-    Collection<Unit> myTeam = new ArrayList<>();
-    Collection<Unit> opponentTeam = new ArrayList<>();
+    Team myTeam = new Team();
+    Team opponentTeam = new Team();
 
-     int numSites = 0;
-     int gold = 0;
-     int touchedSite = 0;
+    int numSites = 0;
+    int gold = 0;
+    int touchedSite = 0;
 
     Board(Scanner in) {
         numSites = in.nextInt();
         for (int i = 0; i < numSites; i++) {
-
-            int siteId = in.nextInt();
-            int x = in.nextInt();
-            int y = in.nextInt();
-            int radius = in.nextInt();
-
-            Site site = new Site(siteId, x, y, radius);
-            sites.add(site);
+            sites.add(new Site(in));
         }
     }
 
@@ -174,73 +167,78 @@ class Board {
         touchedSite = in.nextInt(); // -1 if none
         //for (Site site : sites) { site.update(in); }
         sites.stream().forEach(s -> s.update(in));
+
+        myTeam.renewUnits();
+        opponentTeam.renewUnits();
         int numUnits = in.nextInt();
         for (int i = 0; i < numUnits; i++) {
-
-                int x = in.nextInt();
-                int y = in.nextInt();
-                int owner = in.nextInt();
-            UnitType unitType = UnitType.valueOf(in.nextInt());
-                int health = in.nextInt();
-
+            Unit unit = new Unit(in);
+            if (unit.owner == OwnerType.FRIENDLY)
+                myTeam.add(unit);
+            else
+                opponentTeam.add(unit);
         }
     }
 }
 
 class Site {
-/*
+    /*
     siteId: The numeric identifier of the site
     x y: The numeric coordinates of the site's center
     radius: The radius of the site
     */
-     int siteId = 0;
-     int x = 0;
-     int y = 0;
-     int radius = 0;
+    int siteId = 0;
+    Coord pos;
+    int radius = 0;
 
     int ignore1 = 0;
     int ignore2 = 0;
-    int structureType = 0;
-    int owner = 0;
+    StructureType structureType = StructureType.UNDEFINED;
+    OwnerType owner = OwnerType.UNDEFINED;
     int param1 = 0;
     int param2 = 0;
 
-    Site(int s, int x, int y, int r) {
-        siteId = s;
-        this.x = x;
-        this.y = y;
-        this.radius = r;
+    Site(Scanner in) {
+        siteId = in.nextInt();
+        pos = new Coord(in);
+        radius = in.nextInt();
     }
 
     public void update(Scanner in) {
         siteId = in.nextInt();
         ignore1 = in.nextInt(); // used in future leagues
         ignore2 = in.nextInt(); // used in future leagues
-        structureType = in.nextInt(); // -1 = No structure, 2 = Barracks
-        owner = in.nextInt(); // -1 = No structure, 0 = Friendly, 1 = Enemy
+        structureType = StructureType.valueOf(in.nextInt()); // -1 = No structure, 2 = Barracks
+        owner = OwnerType.valueOf(in.nextInt()); // -1 = No structure, 0 = Friendly, 1 = Enemy
         param1 = in.nextInt();
         param2 = in.nextInt();
     }
 }
 
 class Unit {
-    int x = 0;
-    int y = 0;
-    int owner = 0;
+
+    Coord pos;
+    OwnerType owner = OwnerType.UNDEFINED;
     UnitType unitType = UnitType.UNDEFINED;
     int health = 0;
+
+    Unit (Scanner in) {
+        pos = new Coord(in);
+        owner = OwnerType.valueOf(in.nextInt());
+        unitType = UnitType.valueOf(in.nextInt());
+        health = in.nextInt();
+    }
 }
 
 class Team {
-
-    List<Unit> units = new ArrayList<>();
-    public void update(Scanner in) {
-        int siteId = in.nextInt();
-        int ignore1 = in.nextInt(); // used in future leagues
-        int ignore2 = in.nextInt(); // used in future leagues
-        int structureType = in.nextInt(); // -1 = No structure, 2 = Barracks
-        int owner = in.nextInt(); // -1 = No structure, 0 = Friendly, 1 = Enemy
-        int param1 = in.nextInt();
-        int param2 = in.nextInt();
+    List<Unit> units;
+    void renewUnits() {
+        units = new ArrayList<>();
+    }
+    Team() {
+        renewUnits();
+    }
+    void add(Unit u) {
+        units.add(u);
     }
 }
